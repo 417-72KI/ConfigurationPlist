@@ -7,4 +7,71 @@
 [![Swift Package Manager](https://img.shields.io/badge/Swift%20Package%20Manager-4.2.0-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/417-72KI/ConfigurationPlist/master/LICENSE.md)
 
-TODO: Now editing...
+ConfigurationPlist is a tool to generate `Config.plist` automatically.
+
+Property List is a standard format in macOS/iOS, but also a bother to edit.  
+ConfigurationPlist can create `Config.plist` by merging _yamls_ or _jsons_.
+
+By splitting the file for each type of setting, it is possible to prevent conflicts of configuration files.
+
+## Installation
+### Common
+- Create directory for splitted configuration files, e.g. `$PROJECT/Resources/Config`.
+- If you use different settings for each environment, create `.env` into above directory.
+- You don't have to add above directory into project.
+
+### CocoaPods
+- Add the following line to your test target in your Podfile:
+
+```Ruby
+pod 'ConfigurationPlist'
+```
+
+- Add the following `Run script` build phase to your test target's `Build Phases`:
+
+```Bash
+if [ "${CONFIGURATION}" = 'Release' ]; then
+  ENVIRONMENT='production'
+else
+  ENVIRONMENT='staging'
+fi
+
+"${PODS_ROOT}/ConfigurationPlist/configurationPlist" -e $ENVIRONMENT "$SRCROOT/$PROJECT/Resources/Config"
+```
+
+You can replace `"$SRCROOT/$PROJECT/Resources/Config"` to the relative path from project to the directory you created.
+
+Also, you can add `-o` option with output path to specify where `Config.plist` will be created.
+
+- Add `$SRCROOT/Config.plist` or a path you set with `-o` option into `Output Files` in above `Run script` build phase.
+
+- Drag the new `Run Script` phase **above** the `Compile Sources` phase and **below** `Check Pods Manifest.lock`  
+  If you are using [_R.swift_](https://github.com/mac-cain13/R.swift), drag the new `Run Script` **above** the `Run Script` phase for _R.swift_ and you can load with `R.file.configPlist`.
+- Build your project, in Finder you will now see a `Config.plist` in `$SRCROOT`, drag it into your project.
+
+_Tip:_ Add the `Config.plist` pattern to your `.gitignore` file to prevent unnecessary conflicts.
+
+### Manually
+TODO:
+
+## What is `ConfigurationPlist` doing?
+- Detect all yml/json files in `$SRCROOT/$PROJECT/Resources/Config`, exclude `.env`.
+- If the `-e` option is set and a file with the same name as that option exists in `$SRCROOT/$PROJECT/Resources/Config/.env`, only that file is read.  
+  For example, `-e staging` option means to read `$SRCROOT/$PROJECT/Resources/Config/.env/staging.{yml/yaml/json}`.
+- Parse above files as `Swift.Dictionary`.
+- Deep merge the above dictionaries.
+- Output merged dictionary as a plist file.
+
+## Future work
+- Generate Swift code automatically in order to use `Config.plist` easily.
+
+## Libraries
+* [YamlSwift](https://github.com/behrang/YamlSwift.git)
+* [SourceKitten](https://github.com/jpsim/SourceKitten)
+* [Commander](https://github.com/kylef/Commander)
+* [PathKit](https://github.com/kylef/PathKit)
+* [Nimble](https://github.com/Quick/Nimble.git)
+* [Quick](https://github.com/Quick/Quick.git)
+
+## License
+Available under the [MIT License](LICENSE).
