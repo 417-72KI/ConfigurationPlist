@@ -13,6 +13,46 @@ By splitting the file for each type of setting, it is possible to prevent confli
 
 Also, by splitting the file for environment configurations, it will be easier to overwrite configurations for each environment.
 
+## Example
+### Base yaml file
+```json
+{
+    "API": {
+        "domain": "http://localhost",
+        "path": {
+            "login": {
+                "method": "POST",
+                "path": "/login"
+            },
+            "getList": {
+                "method": "GET",
+                "path": "/list"
+            }
+        }
+    }
+}
+```
+
+### Call above configuration
+#### _Vanilla_
+```Swift
+let file = Bundle.main.path(forResource: "Base", ofType: "json")!
+let data = try! Data(contentsOf: URL(fileURLWithPath: filePath))
+let config = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+let api = config["API"] as! [String: Any]
+let domain = api.domain as! String // "http://localhost"
+let loginPath = (api.path as! [String: Any])["login"] as! [String: Any]
+let path = loginPath.path // "/login"
+let method = loginPath.method // "POST"
+```
+#### _Using ConfigurationPlist_
+```Swift
+// `config` is prepared in AppConfig.generated.swift
+let domain = config.API.domain // "http://localhost"
+let path = config.API.path.login.path // "/login"
+let method = config.API.path.login.method // "POST"
+```
+
 ## Installation
 ### Common
 - Create directory for splitted configuration files, e.g. `$PROJECT/Resources/Config`.
@@ -51,7 +91,7 @@ Also, you can add `-o` option with output path to specify where `Config.plist` w
 _Tip:_ Add the `Config.plist` pattern and the `*.generated.swift` pattern to your `.gitignore` file to prevent unnecessary conflicts.
 
 ### Manually
-TODO: Not supported yet.
+TODO: Future support.
 
 ## What is `ConfigurationPlist` doing?
 - Detect all yml/json files in `$SRCROOT/$PROJECT/Resources/Config`, exclude `.env`.
