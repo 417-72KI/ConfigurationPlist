@@ -7,12 +7,11 @@
 [![Swift Package Manager](https://img.shields.io/badge/Swift%20Package%20Manager-4.2.0-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/417-72KI/ConfigurationPlist/master/LICENSE.md)
 
-ConfigurationPlist is a tool to generate `Config.plist` automatically.
-
-Property List is a standard format in macOS/iOS, but also a bother to edit.  
-ConfigurationPlist can create `Config.plist` by merging _yamls_ or _jsons_.
+ConfigurationPlist is a tool to generate configuration files by merging _yamls_ or _jsons_.
 
 By splitting the file for each type of setting, it is possible to prevent conflicts of configuration files.
+
+Also, by splitting the file for environment configurations, it will be easier to overwrite configurations for each environment.
 
 ## Installation
 ### Common
@@ -49,10 +48,10 @@ Also, you can add `-o` option with output path to specify where `Config.plist` w
   If you are using [_R.swift_](https://github.com/mac-cain13/R.swift), drag the new `Run Script` **above** the `Run Script` phase for _R.swift_ and you can load with `R.file.configPlist`.
 - Build your project, in Finder you will now see a `Config.plist` in `$SRCROOT`, drag it into your project.
 
-_Tip:_ Add the `Config.plist` pattern to your `.gitignore` file to prevent unnecessary conflicts.
+_Tip:_ Add the `Config.plist` pattern and the `*.generated.swift` pattern to your `.gitignore` file to prevent unnecessary conflicts.
 
 ### Manually
-TODO:
+TODO: Not supported yet.
 
 ## What is `ConfigurationPlist` doing?
 - Detect all yml/json files in `$SRCROOT/$PROJECT/Resources/Config`, exclude `.env`.
@@ -61,9 +60,6 @@ TODO:
 - Parse above files as `Swift.Dictionary`.
 - Deep merge the above dictionaries.
 - Output merged dictionary as a plist file.
-
-## Future work
-- Generate Swift code automatically in order to use `Config.plist` easily.
 
 ## Libraries
 * [YamlSwift](https://github.com/behrang/YamlSwift.git)
