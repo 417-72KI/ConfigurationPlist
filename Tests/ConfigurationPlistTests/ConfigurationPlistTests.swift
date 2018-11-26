@@ -16,7 +16,7 @@ final class ConfigurationPlistTests: QuickSpec {
 
         describe("binary") {
             let fooBinary = productsDirectory.appendingPathComponent("configurationPlist")
-            context("with environment.") {
+            context("with environment") {
                 context("staging") {
                     let process = Process()
                     process.executableURL = fooBinary
