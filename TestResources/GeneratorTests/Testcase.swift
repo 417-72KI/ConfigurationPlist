@@ -12,6 +12,7 @@ struct AppConfig: Codable {
     let environment: String
     let isDebug: Bool
     let license: [String]
+    let pi: Double
     let token: Int
 
     enum CodingKeys: String, CodingKey {
@@ -19,6 +20,7 @@ struct AppConfig: Codable {
         case environment
         case isDebug
         case license
+        case pi
         case token
     }
 }
