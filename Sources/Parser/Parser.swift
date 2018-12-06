@@ -18,9 +18,9 @@ public extension Parser {
         let environmentFiles = filePaths.filter { $0.components.contains(envDirComponent) }.compactMap { File(path: $0) }
         let otherFiles = filePaths.filter { !$0.components.contains(envDirComponent) }.compactMap { File(path: $0) }
         let environmentData = try parse(files: environmentFiles, skipInvalidFile: skipInvalidFile)
-            .reduce(AnyParsable(0)) { $0 + $1 }
+            .reduce(AnyParsable()) { $0 + $1 }
         let defaultData = try parse(files: otherFiles, skipInvalidFile: skipInvalidFile)
-            .reduce(AnyParsable(0)) { $0 + $1 }
+            .reduce(AnyParsable()) { $0 + $1 }
         let result = defaultData + environmentData
         return try PropertyListSerialization.data(fromPropertyList: result.rawValue, format: .binary, options: 0)
     }
