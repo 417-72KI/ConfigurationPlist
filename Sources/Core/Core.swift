@@ -9,19 +9,30 @@ public struct Core {
     let environment: String?
     let srcDirectoryPath: Path
     let tempDirectoryPath: Path
+    let scriptInputFiles: [Path]
+    let scriptOutputFiles: [Path]
 
-    public init(outputDirectory: Path, environment: String?, srcDirectoryPath: Path, tempDirectoryPath: Path) {
+    public init(
+        outputDirectory: Path,
+        environment: String?,
+        srcDirectoryPath: Path,
+        tempDirectoryPath: Path,
+        scriptInputFiles: [Path],
+        scriptOutputFiles: [Path]
+        ) {
         self.outputDirectory = outputDirectory
         self.environment = environment
         self.srcDirectoryPath = srcDirectoryPath
         self.tempDirectoryPath = tempDirectoryPath
+        self.scriptInputFiles = scriptInputFiles
+        self.scriptOutputFiles = scriptOutputFiles
     }
 
     public func execute() throws {
         defer { createLastRunFile() }
 
-        guard srcDirectoryPath.isDirectory else { throw CommonError.notDirectory(srcDirectoryPath) }
-        guard outputDirectory.isDirectory else { throw CommonError.notDirectory(outputDirectory) }
+        try validate()
+
         let data = try Parser(directoryPath: srcDirectoryPath).run(environment: environment)
         let outputFile = outputDirectory + Constants.defaultOutputFileName
         try dumpData(data, to: outputFile)
@@ -29,6 +40,13 @@ public struct Core {
         let generatedSwift = try Generator(data: data).run()
         let outputSwiftFile = outputDirectory + Constants.generatedSwiftFileName
         try dumpSwift(generatedSwift, to: outputSwiftFile)
+    }
+}
+
+extension Core {
+    func validate() throws {
+        guard srcDirectoryPath.isDirectory else { throw CommonError.notDirectory(srcDirectoryPath) }
+        guard outputDirectory.isDirectory else { throw CommonError.notDirectory(outputDirectory) }
     }
 }
 

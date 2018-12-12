@@ -35,12 +35,18 @@ let main = command(
     let outputDirectory = Path($0)
     let environment = $1.isEmpty ? nil : $1
     let srcDirPath = Path($2)
+
     let tempDirectoryPath = Path(try Environment.getValue(forKey: .tempDir))
+    let scriptInputFiles = try Environment.getScriptInputFiles().map { Path($0) }
+    let scriptOutputFiles = try Environment.getScriptOutputFiles().map { Path($0) }
+
     try Core(
         outputDirectory: outputDirectory,
         environment: environment,
         srcDirectoryPath: srcDirPath,
-        tempDirectoryPath: tempDirectoryPath
+        tempDirectoryPath: tempDirectoryPath,
+        scriptInputFiles: scriptInputFiles,
+        scriptOutputFiles: scriptOutputFiles
         ).execute()
 }
 
