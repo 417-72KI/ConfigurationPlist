@@ -50,4 +50,4 @@ let main = command(
         ).execute()
 }
 
-main.run(Version.current)
+main.run(ApplicationInfo.version)
