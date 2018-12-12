@@ -21,6 +21,7 @@ final class GeneratorTests: QuickSpec {
                                 ]
                             ]
                         ],
+                        "boot": ["message": "Hello, World!"],
                         "environment": "development",
                         "token": 123456,
                         "license": ["Yaml", "PathKit", "StencilSwiftKit"],

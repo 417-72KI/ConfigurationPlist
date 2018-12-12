@@ -9,6 +9,7 @@ struct AppConfig: Codable {
     static let `default`: AppConfig = .load()
 
     let API: API
+    let boot: Boot
     let environment: String
     let isDebug: Bool
     let license: [String]
@@ -17,6 +18,7 @@ struct AppConfig: Codable {
 
     enum CodingKeys: String, CodingKey {
         case API
+        case boot
         case environment
         case isDebug
         case license
@@ -73,6 +75,16 @@ extension AppConfig.API.Path {
         enum CodingKeys: String, CodingKey {
             case method
             case path
+        }
+    }
+}
+
+extension AppConfig {
+    struct Boot: Codable {
+        let message: String
+
+        enum CodingKeys: String, CodingKey {
+            case message
         }
     }
 }
