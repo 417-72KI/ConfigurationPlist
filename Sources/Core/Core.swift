@@ -45,8 +45,28 @@ public struct Core {
 
 extension Core {
     func validate() throws {
-        guard srcDirectoryPath.isDirectory else { throw CommonError.notDirectory(srcDirectoryPath) }
-        guard outputDirectory.isDirectory else { throw CommonError.notDirectory(outputDirectory) }
+        var errors: [String] = []
+        if !srcDirectoryPath.isDirectory {
+            errors.append(CommonError.notDirectory(srcDirectoryPath).description)
+        }
+        if !outputDirectory.isDirectory {
+            errors.append(CommonError.notDirectory(outputDirectory).description)
+        }
+
+        let scriptInputFiles = self.scriptInputFiles.map { $0.lastComponent }
+        if !scriptInputFiles.contains(Constants.lastRunFileName) {
+            errors.append("Build phase Input Files does not contain `$(TEMP_DIR)/\(Constants.lastRunFileName)`")
+        }
+
+        let scriptOutputFiles = self.scriptOutputFiles.map { $0.lastComponent }
+        if !scriptOutputFiles.contains(Constants.defaultOutputFileName) {
+            errors.append("Build phase Output Files does not contain `path/to/\(Constants.defaultOutputFileName)`")
+        }
+        if !scriptOutputFiles.contains(Constants.generatedSwiftFileName) {
+            errors.append("Build phase Output Files does not contain `path/to/\(Constants.generatedSwiftFileName)`")
+        }
+
+        guard errors.isEmpty else { throw ValidationError(errors: errors) }
     }
 }
 
