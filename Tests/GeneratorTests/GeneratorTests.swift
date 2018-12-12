@@ -40,6 +40,24 @@ final class GeneratorTests: QuickSpec {
                 }
             }
 
+            context("nested data empty") {
+                let content = [
+                    "a_struct": [:],
+                    "b_struct": ["hoge": "fuga"]
+                    ] as [AnyHashable: Any]
+                let data = try! PropertyListSerialization.data(fromPropertyList: content, format: .binary, options: 0)
+                it("success") {
+                    let file = File(path: path + "EmptyNestCase.swift")
+                    let contents = file?.contents
+                    do {
+                        let actual = try Generator(data: data).run()
+                        expect { actual }.to(equal(contents), description: diff(between: actual, and: contents))
+                    } catch {
+                        fail(error.localizedDescription)
+                    }
+                }
+            }
+
             context("empty data") {
                 let content = [:] as [AnyHashable: Any]
                 let data = try! PropertyListSerialization.data(fromPropertyList: content, format: .binary, options: 0)
