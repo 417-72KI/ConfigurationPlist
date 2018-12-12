@@ -8,14 +8,18 @@ public struct Core {
     let outputDirectory: Path
     let environment: String?
     let srcDirectoryPath: Path
+    let tempDirectoryPath: Path
 
-    public init(outputDirectory: Path, environment: String?, srcDirectoryPath: Path) {
+    public init(outputDirectory: Path, environment: String?, srcDirectoryPath: Path, tempDirectoryPath: Path) {
         self.outputDirectory = outputDirectory
         self.environment = environment
         self.srcDirectoryPath = srcDirectoryPath
+        self.tempDirectoryPath = tempDirectoryPath
     }
 
     public func execute() throws {
+        defer { createLastRunFile() }
+
         guard srcDirectoryPath.isDirectory else { throw CommonError.notDirectory(srcDirectoryPath) }
         guard outputDirectory.isDirectory else { throw CommonError.notDirectory(outputDirectory) }
         let data = try Parser(directoryPath: srcDirectoryPath).run(environment: environment)
@@ -43,5 +47,17 @@ extension Core {
         }
         try content.write(to: dest.url, atomically: true, encoding: .utf8)
         print("create \(dest)")
+    }
+}
+
+extension Core {
+    func createLastRunFile() {
+        do {
+            let lastRunFile = tempDirectoryPath + Constants.lastRunFileName
+            try "\(Date().timeIntervalSince1970)\n"
+                .write(to: lastRunFile.url, atomically: true, encoding: .utf8)
+        } catch {
+            print("Failed to write out to '\(Constants.lastRunFileName)', this might cause Xcode to not run the build phase for ConfigurationPlist: \(error)")
+        }
     }
 }

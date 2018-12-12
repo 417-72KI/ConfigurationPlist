@@ -28,6 +28,9 @@ final class ConfigurationPlistTests: QuickSpec {
                         srcPath.absolute().string
                     ]
                     print(process.arguments ?? [])
+                    if case .none = process.environment { process.environment = [:] }
+                    process.environment?["TEMP_DIR"] = tmpDirectory.absoluteString
+                    print(process.environment ?? [:])
                     let pipe = Pipe()
                     process.standardOutput = pipe
                     it("success") {
@@ -64,6 +67,9 @@ final class ConfigurationPlistTests: QuickSpec {
                         srcPath.absolute().string
                     ]
                     print(process.arguments ?? [])
+                    if case .none = process.environment { process.environment = [:] }
+                    process.environment?["TEMP_DIR"] = tmpDirectory.absoluteString
+                    print(process.environment ?? [:])
                     let pipe = Pipe()
                     process.standardOutput = pipe
                     it("success") {

@@ -35,7 +35,13 @@ let main = command(
     let outputDirectory = Path($0)
     let environment = $1.isEmpty ? nil : $1
     let srcDirPath = Path($2)
-    try Core(outputDirectory: outputDirectory, environment: environment, srcDirectoryPath: srcDirPath).execute()
+    let tempDirectoryPath = Path(try Environment.getValue(forKey: .tempDir))
+    try Core(
+        outputDirectory: outputDirectory,
+        environment: environment,
+        srcDirectoryPath: srcDirPath,
+        tempDirectoryPath: tempDirectoryPath
+        ).execute()
 }
 
 main.run(Version.current)
