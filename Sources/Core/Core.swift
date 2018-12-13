@@ -80,7 +80,7 @@ extension Core {
     func dumpSwift(_ content: String, to dest: Path) throws {
         let currentContent = try? String(contentsOf: dest.url)
         if currentContent == content {
-            print("No change.")
+            print("No change with \(dest).")
             return
         }
         try content.write(to: dest.url, atomically: true, encoding: .utf8)
