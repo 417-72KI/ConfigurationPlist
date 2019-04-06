@@ -1,3 +1,7 @@
+# Caution!
+ConfigurationPlist is renamed to BuildConfig.swift, and this repository will be EOL.  
+See https://github.com/417-72KI/BuildConfig.swift
+
 # ConfigurationPlist
 [![Build Status](https://travis-ci.org/417-72KI/ConfigurationPlist.svg?branch=master)](https://travis-ci.org/417-72KI/ConfigurationPlist)
 [![Version](http://img.shields.io/cocoapods/v/ConfigurationPlist.svg?style=flat)](http://cocoadocs.org/pods/ConfigurationPlist)
